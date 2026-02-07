@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'http://localhost:3001',
+  apiUrl: 'https://jobland-api-production.up.railway.app',
 };
