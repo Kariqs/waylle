@@ -2,19 +2,16 @@
     <!-- Stepper Navigation -->
     <div class="bg-white border-b border-gray-200">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
-            <!-- Mobile: Vertical Stepper -->
+            <!-- Mobile stepper -->
             <div class="flex sm:hidden flex-col space-y-3">
-                @for (step of steps; track step.number; let i = $index) {
-                <button (click)="goToStep(step.number)" [class]="currentStep === step.number 
-                            ? 'bg-black text-white' 
-                            : step.completed 
-                                ? 'bg-gray-200 text-black' 
-                                : 'bg-white text-gray-500 border border-gray-300'"
-                    class="rounded-full px-4 py-2.5 font-medium text-sm transition-all duration-200 flex items-center space-x-2 hover:shadow-md w-full">
+                @for (step of steps; track step.number) {
+                <button (click)="goToStep(step.number)" [class.bg-black]="currentStep === step.number"
+                    [class.text-white]="currentStep === step.number"
+                    [class.bg-gray-200]="step.completed && currentStep !== step.number"
+                    class="rounded-full px-4 py-2.5 font-medium text-sm w-full flex items-center justify-center gap-2 transition">
                     @if (step.completed && currentStep !== step.number) {
-                    <span class="text-sm">✓</span>
-                    }
-                    @if (!step.completed || currentStep === step.number) {
+                    <span>✓</span>
+                    } @else {
                     <span>{{ step.number }}</span>
                     }
                     <span>{{ step.label }}</span>
@@ -22,29 +19,24 @@
                 }
             </div>
 
-            <!-- Desktop: Horizontal Stepper -->
-            <div class="hidden sm:flex items-center justify-center space-x-2 lg:space-x-4">
+            <!-- Desktop stepper -->
+            <div class="hidden sm:flex items-center justify-center gap-3 lg:gap-5">
                 @for (step of steps; track step.number; let i = $index) {
                 <div class="flex items-center">
-                    <!-- Step Button -->
-                    <button (click)="goToStep(step.number)" [class]="currentStep === step.number 
-                                ? 'bg-black text-white' 
-                                : step.completed 
-                                    ? 'bg-gray-200 text-black' 
-                                    : 'bg-white text-gray-500 border border-gray-300'"
-                        class="rounded-full px-4 lg:px-6 py-2.5 font-medium text-sm transition-all duration-200 flex items-center space-x-2 hover:shadow-md">
+                    <button (click)="goToStep(step.number)" [class.bg-black]="currentStep === step.number"
+                        [class.text-white]="currentStep === step.number"
+                        [class.bg-gray-200]="step.completed && currentStep !== step.number"
+                        class="rounded-full px-5 py-2.5 font-medium text-sm flex items-center gap-2 transition hover:shadow">
                         @if (step.completed && currentStep !== step.number) {
-                        <span class="text-sm">✓</span>
-                        }
-                        @if (!step.completed || currentStep === step.number) {
+                        <span>✓</span>
+                        } @else {
                         <span>{{ step.number }}</span>
                         }
                         <span class="hidden md:inline">{{ step.label }}</span>
                     </button>
 
-                    <!-- Connector Line -->
-                    @if (i < steps.length - 1) { <div class="w-6 lg:w-12 h-0.5 mx-1 lg:mx-2"
-                        [class.bg-gray-300]="!step.completed" [class.bg-gray-400]="step.completed">
+                    @if (i < steps.length - 1) { <div class="w-10 lg:w-14 h-0.5 mx-2" [class.bg-black]="step.completed"
+                        [class.bg-gray-300]="!step.completed">
                 </div>
                 }
             </div>
@@ -58,209 +50,196 @@
 
     <!-- Step 1: Upload Resume -->
     @if (currentStep === 1) {
-    <div class="animate-fadeIn">
-        <div class="text-center mb-8 sm:mb-12">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Upload Your Resume</h1>
-            <p class="text-gray-500 text-base sm:text-lg px-4">Drop your existing resume and we'll parse your
-                experience.</p>
-        </div>
+    <div class="text-center mb-10">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Upload Your Resume</h1>
+        <p class="text-gray-600 text-lg">PDF or DOCX — we'll extract your experience automatically.</p>
+    </div>
 
-        <!-- Upload Area (empty state) -->
-        @if (!uploadedFile) {
-        <div class="bg-white rounded-2xl border-2 border-dashed border-gray-300 p-8 sm:p-16 text-center"
-            (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
-            <div class="mb-6">
-                <div
-                    class="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-2xl mb-4">
-                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-gray-600" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+    @if (!uploadedFile) {
+    <div class="bg-white rounded-2xl border-2 border-dashed border-gray-300 p-12 text-center"
+        (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
+        <div class="mx-auto w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mb-6">
+            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Drag & drop your resume here</h3>
+        <p class="text-gray-500 mb-6">or click to browse</p>
+        <label class="cursor-pointer">
+            <input type="file" class="hidden" accept=".pdf,.docx" (change)="onFileSelected($event)" />
+            <span class="px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-full font-medium text-gray-700 inline-block">
+                Select file
+            </span>
+        </label>
+    </div>
+    } @else {
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+                <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
-                        </path>
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                 </div>
+                <div class="min-w-0 flex-1">
+                    <p class="font-medium truncate">{{ uploadedFile.name }}</p>
+                    <p class="text-sm text-gray-500">{{ (uploadedFile.size / 1024 / 1024).toFixed(2) }} MB</p>
+                </div>
             </div>
+            <button (click)="removeFile()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <button (click)="continueFromUpload()"
+            class="w-full bg-black text-white py-3.5 rounded-full font-medium hover:bg-gray-900">
+            Continue
+        </button>
+    </div>
+    }
+    }
 
-            <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Drag & drop your resume here</h3>
-            <p class="text-gray-500 mb-6 text-sm sm:text-base">PDF or DOCX, up to 10MB</p>
+    <!-- Step 2: Job URL -->
+    @if (currentStep === 2) {
+    <div class="text-center mb-10">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Paste Job Posting URL</h1>
+        <p class="text-gray-600 text-lg">We'll extract title, company, requirements and description.</p>
+    </div>
 
-            <label class="inline-block">
-                <input type="file" class="hidden" accept=".pdf,.docx" (change)="onFileSelected($event)">
-                <span
-                    class="px-6 py-2.5 border border-gray-300 rounded-full text-gray-700 font-medium hover:bg-gray-50 cursor-pointer inline-block text-sm sm:text-base">
-                    Or browse files
-                </span>
-            </label>
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+            <div class="flex-1 flex items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
+                <svg class="w-5 h-5 text-gray-400 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                <input [(ngModel)]="jobUrl" type="text" placeholder="https://www.linkedin.com/jobs/view/..."
+                    class="flex-1 bg-transparent outline-none" />
+            </div>
+            <button (click)="parseJobUrl()" [disabled]="isParsing"
+                class="px-8 py-3 bg-gray-700 text-white rounded-full font-medium hover:bg-gray-800 disabled:opacity-60">
+                {{ isParsing ? 'Parsing...' : 'Parse' }}
+            </button>
+        </div>
+
+        @if (parseError) {
+        <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
+            {{ parseError }}
         </div>
         }
 
-        <!-- File Uploaded State -->
-        @if (uploadedFile) {
-        <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
-                    <div
-                        class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="font-medium text-gray-900 truncate text-sm sm:text-base">{{ uploadedFile.name }}</p>
-                        <p class="text-xs sm:text-sm text-gray-500">{{ (uploadedFile.size / 1024).toFixed(2) }} KB</p>
-                    </div>
-                </div>
-                <button (click)="removeFile()" class="text-gray-400 hover:text-gray-600 shrink-0 ml-2">
-                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
+        @if (parsedJobData) {
+        <div class="mt-6 bg-teal-50 border border-teal-100 rounded-xl p-6">
+            <div class="flex items-center gap-2 mb-5 text-teal-800">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.293 7.293a1 1 0 011.414 0L9 10.586l5.293-5.293a1 1 0 111.414 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+                <span class="font-medium">Job parsed successfully</span>
             </div>
 
-            <button (click)="continueFromUpload()"
-                class="w-full bg-black text-white py-3 sm:py-3.5 rounded-full font-medium hover:bg-gray-800 transition-colors text-sm sm:text-base">
-                Continue
+            <div class="grid sm:grid-cols-2 gap-6 mb-6 text-sm">
+                <div>
+                    <div class="text-xs text-gray-600 uppercase font-medium mb-1">Title</div>
+                    <div class="font-medium">{{ parsedJobData.jobTitle || '—' }}</div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-600 uppercase font-medium mb-1">Company</div>
+                    <div class="font-medium">{{ parsedJobData.company || '—' }}</div>
+                </div>
+            </div>
+
+            <div>
+                <div class="text-xs text-gray-600 uppercase font-medium mb-2">Description</div>
+                <p class="text-gray-700 leading-relaxed line-clamp-5">{{ parsedJobData.jobDescription || '—' }}</p>
+            </div>
+
+            @if (parsedJobData.requiredSkills?.length) {
+            <div class="mt-6">
+                <div class="text-xs text-gray-600 uppercase font-medium mb-2">Key Skills</div>
+                <div class="flex flex-wrap gap-2">
+                    @for (skill of parsedJobData.requiredSkills; track $index) {
+                    <span class="px-3 py-1 bg-teal-100 text-teal-800 text-xs rounded-full">{{ skill }}</span>
+                    }
+                </div>
+            </div>
+            }
+
+            <button (click)="continueToGenerate()"
+                class="mt-8 w-full bg-black text-white py-3.5 rounded-full font-medium hover:bg-gray-900">
+                Generate Application
             </button>
         </div>
         }
     </div>
     }
 
-    <!-- Step 2: Job URL -->
-    @if (currentStep === 2) {
-    <div class="animate-fadeIn">
-        <div class="text-center mb-8 sm:mb-12">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Paste the Job URL</h1>
-            <p class="text-gray-500 text-base sm:text-lg px-4">We'll extract the job title, company, and requirements
-                automatically.</p>
+    <!-- Step 3: Generating -->
+    @if (currentStep === 3) {
+    <div class="text-center mb-10">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Generating Your Application</h1>
+        <p class="text-gray-600 text-lg">Tailoring resume & cover letter to the role...</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-200 p-8">
+        <div class="mb-8">
+            <div class="flex justify-between text-sm mb-2 font-medium">
+                <span class="text-gray-600">Progress</span>
+                <span>{{ generationProgress | number:'1.0-0' }}%</span>
+            </div>
+            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-black transition-all duration-300" [style.width.%]="generationProgress"></div>
+            </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8">
-            <div
-                class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
-                <div class="flex-1 flex items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
-                    <svg class="w-5 h-5 text-gray-400 mr-3 shrink-0" fill="none" stroke="currentColor"
+        <div class="space-y-4">
+            <div class="flex items-center gap-4 p-4 rounded-xl" [class.bg-gray-50]="generationProgress < 40">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    [class.bg-teal-100]="generationProgress >= 40" [class.bg-gray-100]="generationProgress < 40">
+                    <svg class="w-5 h-5" [class.text-teal-600]="generationProgress >= 40"
+                        [class.text-gray-400]="generationProgress < 40" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
-                        </path>
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
-                    <input type="text" [(ngModel)]="jobUrl" placeholder="https://linkedin.com/jobs/..."
-                        class="flex-1 bg-transparent outline-none text-gray-900 text-sm sm:text-base min-w-0">
                 </div>
-                <button (click)="parseJobUrl()"
-                    class="px-6 sm:px-8 py-3 bg-gray-600 text-white rounded-full font-medium hover:bg-gray-700 transition-colors text-sm sm:text-base whitespace-nowrap">
-                    Parse
-                </button>
+                <span class="font-medium" [class.text-gray-900]="generationProgress >= 40"
+                    [class.text-gray-400]="generationProgress < 40">
+                    Analyzing experience & skills
+                </span>
             </div>
 
-            <!-- Parsed Job Data -->
-            @if (parsedJobData) {
-            <div class="bg-teal-50 rounded-xl p-4 sm:p-6 border border-teal-100">
-                <div class="flex items-center space-x-2 mb-4">
-                    <svg class="w-5 h-5 text-teal-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clip-rule="evenodd"></path>
+            <div class="flex items-center gap-4 p-4 rounded-xl"
+                [class.bg-gray-50]="generationProgress >= 40 && generationProgress < 75">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    [class.bg-teal-100]="generationProgress >= 75" [class.bg-gray-100]="generationProgress < 75">
+                    <svg class="w-5 h-5" [class.text-teal-600]="generationProgress >= 75"
+                        [class.text-gray-400]="generationProgress < 75" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span class="text-teal-800 font-medium text-sm sm:text-base">Job parsed successfully</span>
                 </div>
-
-                <div class="space-y-4">
-                    <div>
-                        <p class="text-xs text-gray-600 font-medium uppercase tracking-wide mb-1">TITLE</p>
-                        <p class="text-gray-900 font-medium text-sm sm:text-base">{{ parsedJobData.title }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-600 font-medium uppercase tracking-wide mb-1">COMPANY</p>
-                        <p class="text-gray-900 font-medium text-sm sm:text-base">{{ parsedJobData.company }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-600 font-medium uppercase tracking-wide mb-1">KEY REQUIREMENTS</p>
-                        <p class="text-gray-700 text-sm sm:text-base">{{ parsedJobData.requirements }}</p>
-                    </div>
-                </div>
-
-                <button (click)="continueToGenerate()"
-                    class="w-full bg-black text-white py-3 sm:py-3.5 rounded-full font-medium hover:bg-gray-800 transition-colors mt-6 text-sm sm:text-base">
-                    Continue to Generate
-                </button>
-            </div>
-            }
-        </div>
-    </div>
-    }
-
-    <!-- Step 3: Generate -->
-    @if (currentStep === 3) {
-    <div class="animate-fadeIn">
-        <div class="text-center mb-8 sm:mb-12">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Generating Your Application</h1>
-            <p class="text-gray-500 text-base sm:text-lg px-4">Our AI is tailoring everything for this role.</p>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8">
-            <div class="mb-6">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-sm text-gray-600 font-medium">Progress</span>
-                    <span class="text-sm font-bold text-gray-900">{{ generationProgress.toFixed(0) }}%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div class="bg-black h-full transition-all duration-300 ease-out rounded-full"
-                        [style.width.%]="generationProgress"></div>
-                </div>
+                <span class="font-medium" [class.text-gray-900]="generationProgress >= 75"
+                    [class.text-gray-400]="generationProgress < 75">
+                    Writing cover letter
+                </span>
             </div>
 
-            <div class="space-y-3 sm:space-y-4">
-                <div class="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-xl"
-                    [class.bg-gray-50]="generationProgress < 33">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0"
-                        [class.bg-teal-100]="generationProgress >= 33" [class.bg-gray-200]="generationProgress < 33">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5" [class.text-teal-600]="generationProgress >= 33"
-                            [class.text-gray-400]="generationProgress < 33" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
-                            </path>
-                        </svg>
-                    </div>
-                    <span class="text-sm sm:text-base text-gray-600 font-medium"
-                        [class.text-gray-400]="generationProgress < 33">Analyzing your experience</span>
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-linear-to-r from-black to-gray-900 text-white">
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
                 </div>
-
-                <div class="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-xl"
-                    [class.bg-gray-50]="generationProgress >= 33 && generationProgress < 66">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0"
-                        [class.bg-teal-100]="generationProgress >= 66" [class.bg-gray-200]="generationProgress < 66">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5" [class.text-teal-600]="generationProgress >= 66"
-                            [class.text-gray-400]="generationProgress < 66" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                    </div>
-                    <span class="text-sm sm:text-base text-gray-600 font-medium"
-                        [class.text-gray-400]="generationProgress < 33">Tailoring your resume</span>
-                </div>
-
-                <div class="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-xl bg-black text-white">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-black" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-sm sm:text-base font-medium">Generating cover letter</span>
-                        <span class="inline-block w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-                    </div>
+                <div class="flex items-center gap-2">
+                    <span class="font-medium">Rewriting resume sections</span>
+                    <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                 </div>
             </div>
         </div>
@@ -269,107 +248,139 @@
 
     <!-- Step 4: Results -->
     @if (currentStep === 4) {
-    <div class="animate-fadeIn">
-        <div class="text-center mb-6 sm:mb-8">
-            <div class="inline-flex items-center space-x-2 bg-teal-50 text-teal-800 px-4 py-2 rounded-full mb-4">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clip-rule="evenodd"></path>
-                </svg>
-                <span class="font-medium text-sm">Application Ready!</span>
-            </div>
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Your Tailored Application</h1>
-            <p class="text-gray-500 text-base sm:text-lg px-4">Review your optimized materials and download when ready.
-            </p>
+    <div class="text-center mb-10">
+        <div class="inline-flex items-center gap-2 bg-teal-100 text-teal-800 px-5 py-2 rounded-full mb-4 font-medium">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.293-9.293a1 1 0 00-1.414-1.414L9 10.586 7.293 8.879a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+            </svg>
+            Ready to use
         </div>
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Your Tailored Application</h1>
+    </div>
 
-        <!-- Tab Navigation -->
-        <div class="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4 mb-6 sm:mb-8">
-            <button
-                class="px-4 sm:px-6 py-2.5 bg-black text-white rounded-full font-medium flex items-center justify-center space-x-2 text-sm sm:text-base">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="flex justify-center gap-4 mb-8">
+        <button (click)="switchTab('resume')" [class.bg-black]="activeTab === 'resume'"
+            [class.text-white]="activeTab === 'resume'" class="px-8 py-3 rounded-full font-medium transition"
+            [class.bg-gray-200]="activeTab !== 'resume'" [class.text-gray-800]="activeTab !== 'resume'">
+            Resume
+        </button>
+        <button (click)="switchTab('coverLetter')" [class.bg-black]="activeTab === 'coverLetter'"
+            [class.text-white]="activeTab === 'coverLetter'" class="px-8 py-3 rounded-full font-medium transition"
+            [class.bg-gray-200]="activeTab !== 'coverLetter'" [class.text-gray-800]="activeTab !== 'coverLetter'">
+            Cover Letter
+        </button>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-10 max-w-4xl mx-auto prose prose-sm sm:prose-base">
+        @if (activeTab === 'resume') {
+        @if (generatedResume) {
+        <!-- Header -->
+        <h1 class="text-3xl font-bold text-center mb-1">{{ generatedResume.fullName }}</h1>
+        <p class="text-center text-xl font-medium text-gray-700 mb-2">{{ generatedResume.title }}</p>
+        <p class="text-center text-sm text-gray-600 mb-10">
+            @if (generatedResume.location) { {{ generatedResume.location }} • }
+            @if (generatedResume.email) { {{ generatedResume.email }} • }
+            @if (generatedResume.phone) { {{ generatedResume.phone }} }
+        </p>
+
+        <!-- Summary -->
+        <h2 class="text-xl font-bold uppercase tracking-wide mb-3 border-b pb-1">Professional Summary</h2>
+        <p class="text-gray-700 leading-relaxed mb-10">{{ generatedResume.professionalSummary }}</p>
+
+        <!-- Skills -->
+        @if (generatedResume.skills.length) {
+        <h2 class="text-xl font-bold uppercase tracking-wide mb-3 border-b pb-1">Skills</h2>
+        <div class="flex flex-wrap gap-2 mb-10">
+            @for (skill of generatedResume.skills; track $index) {
+            <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">{{ skill }}</span>
+            }
+        </div>
+        }
+
+        <!-- Experience -->
+        @if (generatedResume.experience.length) {
+        <h2 class="text-xl font-bold uppercase tracking-wide mb-4 border-b pb-1">Experience</h2>
+        @for (exp of generatedResume.experience; track $index) {
+        <div class="mb-8">
+            <div class="flex justify-between items-baseline">
+                <h3 class="font-bold text-lg">{{ exp.title }}</h3>
+                <span class="text-sm text-gray-600">{{ exp.startDate }} — {{ exp.endDate }}</span>
+            </div>
+            @if (exp.company) {
+            <p class="text-gray-700 font-medium">{{ exp.company }}</p>
+            }
+            <ul class="mt-3 space-y-1.5 text-gray-700 list-disc pl-5">
+                @for (resp of exp.responsibilities; track $index) {
+                <li>{{ resp }}</li>
+                }
+            </ul>
+        </div>
+        }
+        }
+
+        <!-- Education -->
+        @if (generatedResume.education.length) {
+        <h2 class="text-xl font-bold uppercase tracking-wide mb-4 border-b pb-1">Education</h2>
+        @for (edu of generatedResume.education; track $index) {
+        <div class="mb-6">
+            <h3 class="font-bold">{{ edu.degree }}</h3>
+            <p class="text-gray-700">{{ edu.institution }} • {{ edu.graduationDate }}</p>
+        </div>
+        }
+        }
+
+        <!-- Projects -->
+        @if (generatedResume.projects?.length) {
+        <h2 class="text-xl font-bold uppercase tracking-wide mb-4 border-b pb-1">Projects</h2>
+        @for (proj of generatedResume.projects; track $index) {
+        <div class="mb-6">
+            <h3 class="font-bold">{{ proj.name }}</h3>
+            <p class="text-gray-700">{{ proj.description }}</p>
+        </div>
+        }
+        }
+
+        <div class="mt-12 text-center">
+            <button (click)="downloadResume()"
+                class="px-10 py-4 bg-black text-white rounded-full font-medium hover:bg-gray-900 flex items-center gap-2 mx-auto">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                    </path>
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                <span>Tailored Resume</span>
+                Download Resume (PDF)
             </button>
-            <button
-                class="px-4 sm:px-6 py-2.5 bg-gray-100 text-gray-600 rounded-full font-medium flex items-center justify-center space-x-2 hover:bg-gray-200 text-sm sm:text-base">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        </div>
+        } @else {
+        <div class="text-center py-20 text-gray-500">Generating resume...</div>
+        }
+        } @else if (activeTab === 'coverLetter') {
+        @if (generatedCoverLetter) {
+        <div class="leading-relaxed space-y-6">
+            <p>{{ generatedCoverLetter.opening }}</p>
+            @for (paragraph of generatedCoverLetter.body; track $index) {
+            <p>{{ paragraph }}</p>
+            }
+            <p>{{ generatedCoverLetter.closing }}</p>
+        </div>
+
+        <div class="mt-12 text-center">
+            <button (click)="downloadCoverLetter()"
+                class="px-10 py-4 bg-black text-white rounded-full font-medium hover:bg-gray-900 flex items-center gap-2 mx-auto">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                    </path>
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                <span>Cover Letter</span>
+                Download Cover Letter
             </button>
         </div>
-
-        <!-- Resume Preview -->
-        <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 max-w-3xl mx-auto">
-            <div class="mb-6 sm:mb-8">
-                <h2 class="text-xl sm:text-2xl font-bold text-gray-900">JOHN DOE</h2>
-                <p class="text-sm sm:text-base text-gray-600">Senior Frontend Engineer | React & TypeScript Specialist
-                </p>
-            </div>
-
-            <div class="mb-6 sm:mb-8">
-                <h3 class="text-xs sm:text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">PROFESSIONAL SUMMARY
-                </h3>
-                <p class="text-sm sm:text-base text-gray-700 leading-relaxed">
-                    Results-driven frontend engineer with 6+ years building performant, accessible web applications.
-                    Proven expertise in React, TypeScript, and modern frontend architecture with a focus on scalable
-                    component systems and team leadership.
-                </p>
-            </div>
-
-            <div class="mb-6 sm:mb-8">
-                <h3 class="text-xs sm:text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">EXPERIENCE</h3>
-
-                <div class="mb-6">
-                    <p class="font-semibold text-gray-900 text-sm sm:text-base">Senior Frontend Developer — CloudScale
-                        Inc. (2022–Present)</p>
-                    <ul class="mt-2 space-y-1.5 text-gray-700 text-sm sm:text-base">
-                        <li class="flex items-start">
-                            <span class="mr-2 shrink-0">•</span>
-                            <span>Led migration of legacy jQuery codebase to React 18 + TypeScript, reducing load times
-                                by 45%</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="mr-2 shrink-0">•</span>
-                            <span>Architected component library serving 12 product teams, increasing development
-                                velocity by 30%</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="mr-2 shrink-0">•</span>
-                            <span>Mentored 4 junior developers through structured code reviews and pair programming
-                                sessions</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <p class="font-semibold text-gray-900 text-sm sm:text-base">Frontend Engineer — DataViz Corp
-                        (2020–2022)</p>
-                    <ul class="mt-2 space-y-1.5 text-gray-700 text-sm sm:text-base">
-                        <li class="flex items-start">
-                            <span class="mr-2 shrink-0">•</span>
-                            <span>Built real-time data visualization dashboard processing 100K+ data points using D3.js
-                                and React</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="flex justify-center">
-                <button (click)="downloadResume()"
-                    class="w-full sm:w-auto px-6 sm:px-8 py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors text-sm sm:text-base">
-                    Download Resume
-                </button>
-            </div>
-        </div>
+        } @else {
+        <div class="text-center py-20 text-gray-500">Generating cover letter...</div>
+        }
+        }
     </div>
     }
+
 </div>
 </div>
