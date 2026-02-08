@@ -1,0 +1,184 @@
+<div class="min-h-screen bg-gray-50">
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div class="max-w-5xl mx-auto text-center transition-all duration-1000 ease-out"
+            [class.opacity-0]="!heroVisible" [class.translate-y-10]="!heroVisible" [class.opacity-100]="heroVisible"
+            [class.translate-y-0]="heroVisible">
+
+            <!-- Badge -->
+            <div class="inline-block mb-8">
+                <span class="bg-mint-100 text-mint-800 px-6 py-2 rounded-full text-sm font-medium">
+                    AI-Powered Resume Optimization
+                </span>
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6">
+                <span class="text-gray-900">Land your dream job.</span>
+                <br>
+                <span class="text-gray-500">Faster.</span>
+            </h1>
+
+            <!-- Subheading -->
+            <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+                Paste a job URL, upload your resume, and let AI tailor everything —
+                optimized resume, custom cover letter, ATS-ready PDF.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                <a routerLink="/dashboard"
+                    class="bg-black text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-800 transition-all duration-200 flex items-center gap-2 w-full sm:w-auto justify-center">
+                    Start Free
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
+                <a href="#how-it-works"
+                    class="bg-white text-gray-900 px-8 py-4 rounded-full text-lg font-medium border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 w-full sm:w-auto text-center">
+                    See How It Works
+                </a>
+            </div>
+
+            <!-- Social Proof -->
+            <p class="text-gray-600">
+                Trusted by <span class="font-semibold text-gray-900">2,000+</span> job seekers ·
+                <span class="font-semibold text-gray-900">85%</span> interview rate improvement
+            </p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div class="max-w-7xl mx-auto transition-all duration-1000 ease-out" [class.opacity-0]="!featuresVisible"
+            [class.translate-y-10]="!featuresVisible" [class.opacity-100]="featuresVisible"
+            [class.translate-y-0]="featuresVisible">
+
+            <h2 class="text-4xl sm:text-5xl font-bold text-center mb-4">
+                <span class="text-gray-900">Everything you need to</span>
+                <br>
+                <span class="text-gray-500">stand out.</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+                @for (feature of features; track feature.title; let i = $index) {
+                <div class="transition-all duration-700 ease-out"
+                    [style.transition-delay]="featuresVisible ? (i * 100) + 'ms' : '0ms'"
+                    [class.opacity-0]="!featuresVisible" [class.translate-y-10]="!featuresVisible"
+                    [class.opacity-100]="featuresVisible" [class.translate-y-0]="featuresVisible">
+
+                    <div class="bg-gray-50 rounded-2xl p-8 h-full hover:shadow-lg transition-shadow duration-300">
+                        <div class="mb-4 bg-white w-16 h-16 rounded-full flex items-center justify-center">
+                            <i [class]="feature.icon + ' text-2xl text-gray-900'"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">{{ feature.title }}</h3>
+                        <p class="text-gray-600 leading-relaxed">{{ feature.description }}</p>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div class="max-w-7xl mx-auto transition-all duration-1000 ease-out" [class.opacity-0]="!howItWorksVisible"
+            [class.translate-y-10]="!howItWorksVisible" [class.opacity-100]="howItWorksVisible"
+            [class.translate-y-0]="howItWorksVisible">
+
+            <h2 class="text-4xl sm:text-5xl font-bold text-center mb-16">
+                <span class="text-gray-900">How it </span>
+                <span class="text-gray-500">works.</span>
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                @for (step of steps; track step.number; let i = $index) {
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-700 ease-out"
+                    [style.transition-delay]="howItWorksVisible ? (i * 150) + 'ms' : '0ms'"
+                    [class.opacity-0]="!howItWorksVisible" [class.translate-y-10]="!howItWorksVisible"
+                    [class.opacity-100]="howItWorksVisible" [class.translate-y-0]="howItWorksVisible">
+
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="bg-gray-50 w-12 h-12 rounded-full flex items-center justify-center shrink-0">
+                            <i [class]="step.icon + ' text-lg text-gray-900'"></i>
+                        </div>
+                        <span class="text-gray-400 font-medium">{{ step.number }}</span>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ step.title }}</h3>
+                    <p class="text-gray-600 leading-relaxed">{{ step.description }}</p>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div class="max-w-7xl mx-auto transition-all duration-1000 ease-out" [class.opacity-0]="!pricingVisible"
+            [class.translate-y-10]="!pricingVisible" [class.opacity-100]="pricingVisible"
+            [class.translate-y-0]="pricingVisible">
+
+            <div class="text-center mb-16">
+                <h2 class="text-4xl sm:text-5xl font-bold mb-4">
+                    <span class="text-gray-900">Simple, fair </span>
+                    <span class="text-gray-500">pricing.</span>
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Start free. Upgrade when you're ready to go all-in on your job search.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                @for (plan of pricingPlans; track plan.name; let i = $index) {
+                <div class="relative rounded-2xl border-2 p-8 transition-all duration-700 ease-out hover:shadow-xl"
+                    [class.border-gray-200]="!plan.popular" [class.border-black]="plan.popular"
+                    [class.shadow-lg]="plan.popular"
+                    [style.transition-delay]="pricingVisible ? (i * 150) + 'ms' : '0ms'"
+                    [class.opacity-0]="!pricingVisible" [class.translate-y-10]="!pricingVisible"
+                    [class.opacity-100]="pricingVisible" [class.translate-y-0]="pricingVisible">
+
+                    <!-- Most Popular Badge -->
+                    @if (plan.popular) {
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-black text-white px-4 py-1 rounded-full text-sm font-medium">
+                            Most Popular
+                        </span>
+                    </div>
+                    }
+
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name }}</h3>
+                        <div class="flex items-baseline mb-2">
+                            <span class="text-5xl font-bold text-gray-900">{{ plan.price }}</span>
+                            <span class="text-gray-600 ml-2">{{ plan.period }}</span>
+                        </div>
+                        <p class="text-gray-600">{{ plan.description }}</p>
+                    </div>
+
+                    <ul class="space-y-4 mb-8">
+                        @for (feature of plan.features; track feature) {
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-gray-700">{{ feature }}</span>
+                        </li>
+                        }
+                    </ul>
+
+                    <a [href]="'#' + plan.name.toLowerCase()"
+                        [class]="'block w-full text-center px-6 py-3 rounded-full font-medium transition-all duration-200 ' + plan.buttonStyle">
+                        {{ plan.buttonText }}
+                    </a>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+</div>

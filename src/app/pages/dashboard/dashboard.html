@@ -200,12 +200,8 @@
             <div class="flex items-center gap-4 p-4 rounded-xl" [class.bg-gray-50]="generationProgress < 40">
                 <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                     [class.bg-teal-100]="generationProgress >= 40" [class.bg-gray-100]="generationProgress < 40">
-                    <svg class="w-5 h-5" [class.text-teal-600]="generationProgress >= 40"
-                        [class.text-gray-400]="generationProgress < 40" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
+                    <i class="fa-solid fa-brain text-lg" [class.text-teal-600]="generationProgress >= 40"
+                        [class.text-gray-400]="generationProgress < 40"></i>
                 </div>
                 <span class="font-medium" [class.text-gray-900]="generationProgress >= 40"
                     [class.text-gray-400]="generationProgress < 40">
@@ -217,12 +213,8 @@
                 [class.bg-gray-50]="generationProgress >= 40 && generationProgress < 75">
                 <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                     [class.bg-teal-100]="generationProgress >= 75" [class.bg-gray-100]="generationProgress < 75">
-                    <svg class="w-5 h-5" [class.text-teal-600]="generationProgress >= 75"
-                        [class.text-gray-400]="generationProgress < 75" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
+                    <i class="fa-solid fa-file-lines text-lg" [class.text-teal-600]="generationProgress >= 75"
+                        [class.text-gray-400]="generationProgress < 75"></i>
                 </div>
                 <span class="font-medium" [class.text-gray-900]="generationProgress >= 75"
                     [class.text-gray-400]="generationProgress < 75">
@@ -230,12 +222,9 @@
                 </span>
             </div>
 
-            <div class="flex items-center gap-4 p-4 rounded-xl bg-linear-to-r from-black to-gray-900 text-white">
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-black text-white">
                 <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
+                    <i class="fa-solid fa-sparkles text-lg text-black"></i>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="font-medium">Rewriting resume sections</span>
@@ -273,112 +262,164 @@
         </button>
     </div>
 
-    <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-10 max-w-4xl mx-auto prose prose-sm sm:prose-base">
-        @if (activeTab === 'resume') {
-        @if (generatedResume) {
-        <!-- Header -->
-        <h1 class="text-3xl font-bold text-center mb-1">{{ generatedResume.fullName }}</h1>
-        <p class="text-center text-xl font-medium text-gray-700 mb-2">{{ generatedResume.title }}</p>
-        <p class="text-center text-sm text-gray-600 mb-10">
-            @if (generatedResume.location) { {{ generatedResume.location }} • }
-            @if (generatedResume.email) { {{ generatedResume.email }} • }
-            @if (generatedResume.phone) { {{ generatedResume.phone }} }
-        </p>
+    <!-- Resume/Cover Letter Preview -->
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+        <!-- Document Preview Container -->
+        <div class="max-w-204 mx-auto bg-white" style="font-family: Arial, Helvetica, sans-serif;">
 
-        <!-- Summary -->
-        <h2 class="text-xl font-bold uppercase tracking-wide mb-3 border-b pb-1">Professional Summary</h2>
-        <p class="text-gray-700 leading-relaxed mb-10">{{ generatedResume.professionalSummary }}</p>
-
-        <!-- Skills -->
-        @if (generatedResume.skills.length) {
-        <h2 class="text-xl font-bold uppercase tracking-wide mb-3 border-b pb-1">Skills</h2>
-        <div class="flex flex-wrap gap-2 mb-10">
-            @for (skill of generatedResume.skills; track $index) {
-            <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">{{ skill }}</span>
-            }
-        </div>
-        }
-
-        <!-- Experience -->
-        @if (generatedResume.experience.length) {
-        <h2 class="text-xl font-bold uppercase tracking-wide mb-4 border-b pb-1">Experience</h2>
-        @for (exp of generatedResume.experience; track $index) {
-        <div class="mb-8">
-            <div class="flex justify-between items-baseline">
-                <h3 class="font-bold text-lg">{{ exp.title }}</h3>
-                <span class="text-sm text-gray-600">{{ exp.startDate }} — {{ exp.endDate }}</span>
-            </div>
-            @if (exp.company) {
-            <p class="text-gray-700 font-medium">{{ exp.company }}</p>
-            }
-            <ul class="mt-3 space-y-1.5 text-gray-700 list-disc pl-5">
-                @for (resp of exp.responsibilities; track $index) {
-                <li>{{ resp }}</li>
+            @if (activeTab === 'resume') {
+            @if (generatedResume) {
+            <div class="p-8 sm:p-12">
+                <!-- Header -->
+                <h1 class="text-4xl font-bold mb-2" style="font-family: Arial, Helvetica, sans-serif;">
+                    {{ generatedResume.personalInfo.fullName }}
+                </h1>
+                <p class="text-sm mb-5" style="font-family: Arial, Helvetica, sans-serif;">
+                    @if (generatedResume.personalInfo.email) { {{ generatedResume.personalInfo.email }} }
+                    @if (generatedResume.personalInfo.email && generatedResume.personalInfo.phone) { | }
+                    @if (generatedResume.personalInfo.phone) { {{ generatedResume.personalInfo.phone }} }
+                    @if ((generatedResume.personalInfo.email || generatedResume.personalInfo.phone) &&
+                    generatedResume.personalInfo.location) { | }
+                    @if (generatedResume.personalInfo.location) { {{ generatedResume.personalInfo.location }} }
+                </p>
+                @if (generatedResume.personalInfo.linkedin) {
+                <p class="text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                    {{ generatedResume.personalInfo.linkedin }}
+                </p>
                 }
-            </ul>
-        </div>
-        }
-        }
+                @if (generatedResume.personalInfo.github) {
+                <p class="text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                    {{ generatedResume.personalInfo.github }}
+                </p>
+                }
+                @if (generatedResume.personalInfo.portfolio) {
+                <p class="text-sm mb-5" style="font-family: Arial, Helvetica, sans-serif;">
+                    {{ generatedResume.personalInfo.portfolio }}
+                </p>
+                }
 
-        <!-- Education -->
-        @if (generatedResume.education.length) {
-        <h2 class="text-xl font-bold uppercase tracking-wide mb-4 border-b pb-1">Education</h2>
-        @for (edu of generatedResume.education; track $index) {
-        <div class="mb-6">
-            <h3 class="font-bold">{{ edu.degree }}</h3>
-            <p class="text-gray-700">{{ edu.institution }} • {{ edu.graduationDate }}</p>
-        </div>
-        }
-        }
+                <!-- Professional Summary -->
+                @if (generatedResume.professionalSummary) {
+                <h2 class="text-sm font-bold uppercase border-b border-black pb-1 mb-2 mt-6"
+                    style="font-family: Arial, Helvetica, sans-serif;">
+                    Professional Summary
+                </h2>
+                <p class="text-sm leading-relaxed mb-4" style="font-family: Arial, Helvetica, sans-serif;">
+                    {{ generatedResume.professionalSummary }}
+                </p>
+                }
 
-        <!-- Projects -->
-        @if (generatedResume.projects?.length) {
-        <h2 class="text-xl font-bold uppercase tracking-wide mb-4 border-b pb-1">Projects</h2>
-        @for (proj of generatedResume.projects; track $index) {
-        <div class="mb-6">
-            <h3 class="font-bold">{{ proj.name }}</h3>
-            <p class="text-gray-700">{{ proj.description }}</p>
-        </div>
-        }
-        }
+                <!-- Work Experience -->
+                @if (generatedResume.experience.length) {
+                <h2 class="text-sm font-bold uppercase border-b border-black pb-1 mb-3 mt-6"
+                    style="font-family: Arial, Helvetica, sans-serif;">
+                    Work Experience
+                </h2>
+                @for (exp of generatedResume.experience; track $index) {
+                <div class="mb-4">
+                    <h3 class="font-bold text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                        {{ exp.title }}
+                    </h3>
+                    @if (exp.company) {
+                    <p class="text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                        {{ exp.company }}
+                    </p>
+                    }
+                    <p class="text-sm mb-2" style="font-family: Arial, Helvetica, sans-serif;">
+                        {{ exp.startDate }} – {{ exp.endDate }}
+                    </p>
+                    <ul class="list-disc ml-5 space-y-1 text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                        @for (resp of exp.responsibilities; track $index) {
+                        <li>{{ resp }}</li>
+                        }
+                    </ul>
+                </div>
+                }
+                }
 
-        <div class="mt-12 text-center">
-            <button (click)="downloadResume()"
-                class="px-10 py-4 bg-black text-white rounded-full font-medium hover:bg-gray-900 flex items-center gap-2 mx-auto">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Download Resume (PDF)
-            </button>
-        </div>
-        } @else {
-        <div class="text-center py-20 text-gray-500">Generating resume...</div>
-        }
-        } @else if (activeTab === 'coverLetter') {
-        @if (generatedCoverLetter) {
-        <div class="leading-relaxed space-y-6">
-            <p>{{ generatedCoverLetter.opening }}</p>
-            @for (paragraph of generatedCoverLetter.body; track $index) {
-            <p>{{ paragraph }}</p>
+                <!-- Education -->
+                @if (generatedResume.education.length) {
+                <h2 class="text-sm font-bold uppercase border-b border-black pb-1 mb-3 mt-6"
+                    style="font-family: Arial, Helvetica, sans-serif;">
+                    Education
+                </h2>
+                @for (edu of generatedResume.education; track $index) {
+                <div class="mb-3">
+                    <h3 class="font-bold text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                        {{ edu.degree }}
+                    </h3>
+                    <p class="text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                        {{ edu.institution }}
+                    </p>
+                    <p class="text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                        {{ edu.graduationDate }}
+                    </p>
+                </div>
+                }
+                }
+
+                <!-- Skills -->
+                @if (generatedResume.skills.length) {
+                <h2 class="text-sm font-bold uppercase border-b border-black pb-1 mb-2 mt-6"
+                    style="font-family: Arial, Helvetica, sans-serif;">
+                    Skills
+                </h2>
+                <p class="text-sm mb-3" style="font-family: Arial, Helvetica, sans-serif;">
+                    {{ generatedResume.skills.join(', ') }}
+                </p>
+                }
+
+                <!-- Projects -->
+                @if (generatedResume.projects?.length) {
+                <h2 class="text-sm font-bold uppercase border-b border-black pb-1 mb-3 mt-6"
+                    style="font-family: Arial, Helvetica, sans-serif;">
+                    Projects
+                </h2>
+                @for (proj of generatedResume.projects; track $index) {
+                <div class="mb-3">
+                    <h3 class="font-bold text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                        {{ proj.name }}
+                    </h3>
+                    <p class="text-sm" style="font-family: Arial, Helvetica, sans-serif;">
+                        {{ proj.description }}
+                    </p>
+                </div>
+                }
+                }
+            </div>
+
+            <div class="border-t border-gray-200 p-6 bg-gray-50 text-center">
+                <button (click)="downloadResume()"
+                    class="px-10 py-3.5 bg-black text-white rounded-full font-medium hover:bg-gray-900 inline-flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i>
+                    Download Resume (PDF)
+                </button>
+            </div>
+            } @else {
+            <div class="text-center py-20 text-gray-500">Generating resume...</div>
             }
-            <p>{{ generatedCoverLetter.closing }}</p>
-        </div>
+            } @else if (activeTab === 'coverLetter') {
+            @if (generatedCoverLetter) {
+            <div class="p-8 sm:p-12 leading-relaxed space-y-4 text-sm">
+                <p class="text-justify">{{ generatedCoverLetter.opening }}</p>
+                @for (paragraph of generatedCoverLetter.body; track $index) {
+                <p class="text-justify">{{ paragraph }}</p>
+                }
+                <p class="text-justify">{{ generatedCoverLetter.closing }}</p>
+            </div>
 
-        <div class="mt-12 text-center">
-            <button (click)="downloadCoverLetter()"
-                class="px-10 py-4 bg-black text-white rounded-full font-medium hover:bg-gray-900 flex items-center gap-2 mx-auto">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Download Cover Letter
-            </button>
+            <div class="border-t border-gray-200 p-6 bg-gray-50 text-center">
+                <button (click)="downloadCoverLetter()"
+                    class="px-10 py-3.5 bg-black text-white rounded-full font-medium hover:bg-gray-900 inline-flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i>
+                    Download Cover Letter
+                </button>
+            </div>
+            } @else {
+            <div class="text-center py-20 text-gray-500">Generating cover letter...</div>
+            }
+            }
         </div>
-        } @else {
-        <div class="text-center py-20 text-gray-500">Generating cover letter...</div>
-        }
-        }
     </div>
     }
 
